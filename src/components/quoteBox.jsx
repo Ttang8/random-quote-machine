@@ -15,15 +15,29 @@ export default class QuoteBox extends Component {
     this.generateRandomColor = this.generateRandomColor.bind(this);
   }
 
-  async componentDidMount() {
+  componentDidMount() {
     try {
-      const response = await fetch("https://type.fit/api/quotes");
-      const quotes = await response.json()
-      this.setState({quotes: quotes});
-      this.setState({loading: false});
-      this.chooseRandomQuote();
-      this.generateRandomColor();
-    } catch (error) {
+      // const response = fetch("https://type.fit/api/quotes");
+      // const quotes = response.json()
+      // this.setState({quotes: quotes});
+      // this.setState({loading: false});
+      // this.generateRandomColor();
+      // this.chooseRandomQuote();
+      fetch("https://type.fit/api/quotes").then(
+        response => {
+          // console.log(response.json());
+          return response.json()
+        }
+      )
+        .then(quotes => {
+          this.setState({quotes: quotes})
+        })
+        .then(() => {
+          this.setState({loading: false})
+        })
+        .then(() => this.generateRandomColor())
+        .then(() => this.chooseRandomQuote())
+      } catch (error) {
       console.log(error)
     }
   }
@@ -34,6 +48,7 @@ export default class QuoteBox extends Component {
     }
     let arrLen = this.state.quotes.length;
     let randomQuote = this.state.quotes[Math.floor(Math.random() * arrLen)]
+    console.log(randomQuote)
     this.setState({randomQuote: randomQuote})
   }
 
